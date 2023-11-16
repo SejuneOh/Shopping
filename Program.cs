@@ -10,8 +10,11 @@ builder.Services.AddDbContext<StoreContext>(dbOptions =>
 });
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
+
 
 // DB Migration
 using (var scope = app.Services.CreateScope())
@@ -30,6 +33,13 @@ using (var scope = app.Services.CreateScope())
   }
 }
 
+
+// swagger
+if (app.Environment.IsDevelopment())
+{
+  app.UseSwagger();
+  app.UseSwaggerUI();
+}
 
 
 
