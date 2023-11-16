@@ -1,11 +1,15 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Shopping;
 
 
 public class UserModel
 {
-  public string Id { get; set; }
-  public string OrderId { get; set; }
-  public string name { get; set; }
-  public string? email { get; set; }
+  public Guid Id { get; set; }
+  public List<OrderModel>? OrderId { get; set; } = null;
+
+  [Required]
+  public string Name { get; set; } = "";
+  public string? Email { get; set; }
 
 }

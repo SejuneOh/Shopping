@@ -9,6 +9,11 @@ builder.Services.AddDbContext<StoreContext>(dbOptions =>
   dbOptions.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+// Add Seed
+builder.Services.AddScoped<IDataSeeder, DataSeeder>();
+
+
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 
@@ -25,6 +30,10 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<StoreContext>();
     db.Database.Migrate();
 
+
+    // Seed Data
+    var dataSeeder = services.GetRequiredService<IDataSeeder>();
+    dataSeeder.SeedData();
   }
   catch (Exception error)
   {
