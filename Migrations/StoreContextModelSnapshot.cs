@@ -24,14 +24,11 @@ namespace Shopping.Migrations
 
             modelBuilder.Entity("Shopping.OrderModel", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("OrderType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -55,6 +52,12 @@ namespace Shopping.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("OrderModelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("OrderedId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
@@ -63,22 +66,9 @@ namespace Shopping.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrderModelId");
+
                     b.ToTable("Product");
-                });
-
-            modelBuilder.Entity("Shopping.ProductsModel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("OrderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Shopping.UserModel", b =>
@@ -104,6 +94,18 @@ namespace Shopping.Migrations
                     b.HasOne("Shopping.UserModel", null)
                         .WithMany("OrderId")
                         .HasForeignKey("UserModelId");
+                });
+
+            modelBuilder.Entity("Shopping.ProductItemModel", b =>
+                {
+                    b.HasOne("Shopping.OrderModel", null)
+                        .WithMany("ProductId")
+                        .HasForeignKey("OrderModelId");
+                });
+
+            modelBuilder.Entity("Shopping.OrderModel", b =>
+                {
+                    b.Navigation("ProductId");
                 });
 
             modelBuilder.Entity("Shopping.UserModel", b =>

@@ -7,4 +7,6 @@ public class ProductItemModel
   public string Name { get; set; } = "";
   public int Price { get; set; }
   public int quantity { get; set; }
+
+  public string? OrderedId { get; set; } = null;
 }

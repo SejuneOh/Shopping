@@ -3,8 +3,8 @@ namespace Shopping;
 
 public class OrderModel
 {
-  public string Id { get; set; }
-  public string ProductId { get; set; }
+  public Guid Id { get; set; }
+  public List<ProductItemModel>? ProductId { get; set; } = null;
 
   public string OrderType { get; set; }
 }
