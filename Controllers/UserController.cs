@@ -27,4 +27,15 @@ public class UsersController : ControllerBase
   }
 
 
+  [HttpGet("{id}")]
+  public async Task<ActionResult<UserModel>> GetUserById(Guid _id)
+  {
+    var selectedUser = await _context.User.FindAsync(_id);
+
+    if (selectedUser == null)
+    {
+      return NotFound();
+    }
+    return selectedUser;
+  }
 }

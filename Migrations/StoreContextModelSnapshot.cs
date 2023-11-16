@@ -35,6 +35,17 @@ namespace Shopping.Migrations
                     b.Property<Guid?>("UserModelId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("orderProductId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("userId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserModelId");
@@ -52,9 +63,6 @@ namespace Shopping.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("OrderModelId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("OrderedId")
                         .HasColumnType("nvarchar(max)");
 
@@ -65,8 +73,6 @@ namespace Shopping.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderModelId");
 
                     b.ToTable("Product");
                 });
@@ -94,18 +100,6 @@ namespace Shopping.Migrations
                     b.HasOne("Shopping.UserModel", null)
                         .WithMany("OrderId")
                         .HasForeignKey("UserModelId");
-                });
-
-            modelBuilder.Entity("Shopping.ProductItemModel", b =>
-                {
-                    b.HasOne("Shopping.OrderModel", null)
-                        .WithMany("ProductId")
-                        .HasForeignKey("OrderModelId");
-                });
-
-            modelBuilder.Entity("Shopping.OrderModel", b =>
-                {
-                    b.Navigation("ProductId");
                 });
 
             modelBuilder.Entity("Shopping.UserModel", b =>
