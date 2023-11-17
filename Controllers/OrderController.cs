@@ -18,6 +18,36 @@ public class OdersController : ControllerBase
   }
 
 
+  [HttpPost("{userId}")]
+  public async Task<ActionResult<OrderModel>> PostOrder(string userId, [FromBody] OrderModel _order)
+  {
+    try
+    {
+      // 사용자
+      var orderUser = await _context.User.FindAsync(userId);
+      if (orderUser == null || _order == null) return BadRequest();
+
+      ProductItemModel? selectedProduct = await _context.Product.FindAsync(_order.orderProductId);
+
+      if (selectedProduct == null) return NotFound();
+      if (selectedProduct.Quantity <= 0) return StatusCode(200, "No quantity left.");
+
+      selectedProduct.Quantity -= 1;
+
+      _context.Order.Add(_order);
+
+      await _context.SaveChangesAsync();
+
+      return Ok(_order);
+    }
+    catch (Exception error)
+    {
+      _logger.LogError(error, "Get Order list Error");
+      return StatusCode(500, new { error = "Internal Server Error" });
+    }
+  }
+
+
   [HttpGet]
   public async Task<ActionResult<IEnumerable<OrderModel>>> GetOrderList()
   {
@@ -35,27 +65,70 @@ public class OdersController : ControllerBase
     }
   }
 
-  [HttpPost("{userId}")]
-  public async Task<ActionResult<OrderModel>> PostOrder([FromQuery] string _userId, [FromBody] OrderModel _order)
+
+  [HttpGet("{id}")]
+  public async Task<ActionResult<OrderModel>> GetOrderById(Guid id)
+  {
+    var selectedOrder = await _context.Order.FindAsync(id);
+
+    if (selectedOrder == null)
+    {
+      return NotFound();
+    }
+    return selectedOrder;
+  }
+
+
+
+
+  [HttpPut("{id}")]
+  public async Task<IActionResult> UpdateOrder(string id, UpdateOrderModel updateUserData)
   {
     try
     {
-      // 사용자
-      var orderUser = await _context.User.FindAsync(_userId);
-      if (orderUser == null || _order == null) return BadRequest();
+      if (!Guid.TryParse(id, out Guid originGuid) || updateUserData == null)
+      {
+        return BadRequest();
+      }
 
-      ProductItemModel? selectedProduct = await _context.Product.FindAsync(_order.orderProductId);
+      var selectedOrder = await _context.Order.FindAsync(originGuid);
+      if (selectedOrder == null) return NotFound();
 
-      if (selectedProduct == null) return NotFound();
-      if (selectedProduct.quantity <= 0) return StatusCode(200, "No quantity left.");
 
-      selectedProduct.quantity -= 1;
 
-      _context.Order.Add(_order);
+      _context.Entry(selectedOrder).State = EntityState.Modified;
 
       await _context.SaveChangesAsync();
+      return Ok(selectedOrder);
 
-      return Ok(_order);
+    }
+    catch (Exception error)
+    {
+      _logger.LogError(error, "Get Order list Error");
+      return StatusCode(500, new { error = "Internal Server Error" });
+
+    }
+  }
+
+  [HttpDelete("{id}")]
+  public async Task<IActionResult> DeleteOrder(string id)
+  {
+
+    try
+    {
+      if (!Guid.TryParse(id, out Guid searchId))
+      {
+        return BadRequest();
+      }
+
+      var selectedOrder = await _context.Order.FindAsync(searchId);
+
+      if (selectedOrder == null) return NotFound();
+
+      _context.Order.Remove(selectedOrder);
+      await _context.SaveChangesAsync();
+
+      return NoContent();
     }
     catch (Exception error)
     {
@@ -63,7 +136,7 @@ public class OdersController : ControllerBase
       return StatusCode(500, new { error = "Internal Server Error" });
     }
   }
-
 }
+
 
 

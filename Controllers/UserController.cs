@@ -19,27 +19,6 @@ public class UsersController : ControllerBase
     _context = context;
   }
 
-  // Get Users
-  [HttpGet]
-  public async Task<ActionResult<IEnumerable<UserModel>>> GetUsers()
-  {
-    return await _context.User.ToListAsync();
-  }
-
-
-  [HttpGet("{id}")]
-  public async Task<ActionResult<UserModel>> GetUserById(Guid id)
-  {
-    var selectedUser = await _context.User.FindAsync(id);
-
-    if (selectedUser == null)
-    {
-      return NotFound();
-    }
-    return selectedUser;
-  }
-
-
   [HttpPost]
   public async Task<ActionResult<UserModel>> CreateUser(CreateUserModel newUser)
   {
@@ -62,6 +41,29 @@ public class UsersController : ControllerBase
 
     }
   }
+
+  // Get Users
+  [HttpGet]
+  public async Task<ActionResult<IEnumerable<UserModel>>> GetUsers()
+  {
+    return await _context.User.ToListAsync();
+  }
+
+
+  [HttpGet("{id}")]
+  public async Task<ActionResult<UserModel>> GetUserById(Guid id)
+  {
+    var selectedUser = await _context.User.FindAsync(id);
+
+    if (selectedUser == null)
+    {
+      return NotFound();
+    }
+    return selectedUser;
+  }
+
+
+
 
   [HttpPut("{id}")]
   public async Task<IActionResult> UpdateUser(string id, UserModel updateUserData)
@@ -88,7 +90,7 @@ public class UsersController : ControllerBase
   }
 
   [HttpDelete("{id}")]
-  public async Task<IActionResult> DeleteTodoItem(string id)
+  public async Task<IActionResult> DeleteUser(string id)
   {
 
     try

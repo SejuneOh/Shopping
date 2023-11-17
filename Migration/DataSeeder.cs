@@ -33,10 +33,10 @@ public class DataSeeder : IDataSeeder
     if (!_dbContext.Product.Any())
     {
       var productSeedData = new List<ProductItemModel>{
-        new ProductItemModel {Id = Guid.NewGuid(), Name = "TV", Price= 120, quantity = 10},
-        new ProductItemModel {Id = Guid.NewGuid(), Name = "Microwave", Price= 90, quantity = 5},
-        new ProductItemModel {Id = Guid.NewGuid(), Name = "Monitor", Price= 100, quantity = 12},
-        new ProductItemModel {Id = Guid.NewGuid(), Name = "Wallet", Price= 30, quantity = 4},
+        new ProductItemModel {Id = Guid.NewGuid(), Name = "TV", Price= 120,  Quantity = 10},
+        new ProductItemModel {Id = Guid.NewGuid(), Name = "Microwave", Price= 90,  Quantity = 5},
+        new ProductItemModel {Id = Guid.NewGuid(), Name = "Monitor", Price= 100,  Quantity = 12},
+        new ProductItemModel {Id = Guid.NewGuid(), Name = "Wallet", Price= 30,  Quantity = 4},
       };
 
       _dbContext.Product.AddRange(productSeedData);
