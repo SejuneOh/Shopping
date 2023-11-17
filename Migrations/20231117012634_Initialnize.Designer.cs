@@ -12,8 +12,8 @@ using Shopping;
 namespace Shopping.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20231116195109_Initialize")]
-    partial class Initialize
+    [Migration("20231117012634_Initialnize")]
+    partial class Initialnize
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
