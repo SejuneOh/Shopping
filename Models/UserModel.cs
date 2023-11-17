@@ -22,7 +22,7 @@ public class UserModel
     Email = _newUser.Email;
   }
   public Guid Id { get; set; }
-  public List<OrderModel>? OrderId { get; set; } = null;
+  // public List<OrderModel>? OrderId { get; set; } = null;
 
   [Required]
   public string Name { get; set; } = "";
@@ -36,4 +36,9 @@ public class CreateUserModel
 {
   public string Name { get; set; } = "";
   public string? Email { get; set; }
+}
+
+public class UserOrderModel : UserModel
+{
+  public List<OrderModel>? OrderList { get; set; } = null;
 }

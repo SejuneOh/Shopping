@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Shopping;
 
 
@@ -48,6 +50,12 @@ public class CreateProductModel
 }
 
 public class UpdateProductModel : CreateProductModel { }
+public class OrderProductModel
+{
+  [Required]
+  public string ProductId { get; set; } = "";
+  public int Quantity { get; set; }
+}
 
 
 

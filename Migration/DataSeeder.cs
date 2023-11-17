@@ -20,9 +20,9 @@ public class DataSeeder : IDataSeeder
     if (!_dbContext.User.Any())
     {
       var seedData = new List<UserModel>{
-        new UserModel{Id = Guid.NewGuid(), Name="Kim Chul Su",Email = "test1@email.com", OrderId= null},
-        new UserModel{Id = Guid.NewGuid(), Name="Hong Kill Dong",Email = "test2@email.com", OrderId= null},
-        new UserModel{Id = Guid.NewGuid(), Name="Park Dong Eun",Email = "test1@email.com", OrderId= null},
+        new UserModel{Id = Guid.NewGuid(), Name="Kim Chul Su",Email = "test1@email.com"},
+        new UserModel{Id = Guid.NewGuid(), Name="Hong Kill Dong",Email = "test2@email.com"},
+        new UserModel{Id = Guid.NewGuid(), Name="Park Dong Eun",Email = "test1@email.com"},
     };
 
       _dbContext.User.AddRange(seedData);

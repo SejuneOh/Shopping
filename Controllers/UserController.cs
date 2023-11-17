@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Shopping;
 
@@ -115,6 +116,100 @@ public class UsersController : ControllerBase
       return StatusCode(500, new { error = "Internal Server Error" });
     }
   }
+
+  [HttpPost("{id}/Order")]
+  public async Task<IActionResult> UserOrderProduct(string id, OrderProductModel orderProduct)
+  {
+    try
+    {
+      if (!Guid.TryParse(id, out Guid userId) || !Guid.TryParse(orderProduct.ProductId, out Guid productId) || orderProduct.Quantity == 0)
+      {
+        return BadRequest();
+      }
+      // var selectedUser = RedirectToAction(nameof(GetUserById), userId);
+      var selectedUser = await _context.User.FindAsync(userId);
+      var selectedProudcted = await _context.Product.FindAsync(productId);
+      if (selectedUser == null || selectedProudcted == null)
+      {
+        return NotFound();
+      }
+
+      if (selectedProudcted.Quantity < orderProduct.Quantity)
+      {
+        return StatusCode(400, "The current quantity of the item is less than the quantity you queried.");
+      }
+
+      var newORder = new OrderModel
+      {
+        Id = Guid.NewGuid(),
+        userId = selectedUser.Id.ToString(),
+        orderProductId = selectedProudcted.Id.ToString(),
+        quantity = orderProduct.Quantity
+      };
+
+      _context.Order.Add(newORder);
+
+      // if (selectedUser.OrderId == null)
+      // {
+      //   var orderList = new List<OrderModel> { newORder }; // 중괄호를 사용하여 리스트를 초기화
+      //   selectedUser.OrderId = orderList;
+      // }
+      // else
+      // {
+      //   selectedUser.OrderId.Add(newORder);
+      // }
+
+      selectedProudcted.Quantity -= orderProduct.Quantity;
+
+
+      await _context.SaveChangesAsync();
+
+      return Ok(newORder);
+
+    }
+    catch (Exception error)
+    {
+      _logger.LogError(error, "Get Order list Error");
+      return StatusCode(500, new { error = "Internal Server Error" });
+
+    }
+  }
+
+  [HttpGet("{id}/Order")]
+  public async Task<IActionResult> GetUserOrderList(string id)
+  {
+    try
+    {
+      if (!Guid.TryParse(id, out Guid userId))
+      {
+        return BadRequest();
+      }
+
+      var selectedUser = await _context.User.FindAsync(userId);
+      if (selectedUser == null) return NotFound("Not Found User");
+
+      var orderList = await _context.Order.Where(x => x.userId == id).ToListAsync();
+
+      var userOrderModel = new UserOrderModel
+      {
+        Id = selectedUser.Id,
+        Name = selectedUser.Name,
+        Email = selectedUser.Email,
+        OrderList = orderList
+      };
+
+      return Ok(userOrderModel);
+
+    }
+    catch (Exception error)
+    {
+      _logger.LogError(error, "Get Order list Error");
+      return StatusCode(500, new { error = "Internal Server Error" });
+
+    }
+  }
 }
+
+
 
 

@@ -18,7 +18,7 @@ public class OrderModel
   [Required]
   public int quantity { get; set; }
 
-  public string OrderType { get; set; }
+  public string OrderType { get; set; } = "";
 }
 
 
@@ -32,6 +32,6 @@ public class UpdateOrderModel
   [Required]
   public int quantity { get; set; }
 
-  public string OrderType { get; set; }
+  public string OrderType { get; set; } = "";
 
 }

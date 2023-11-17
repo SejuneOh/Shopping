@@ -18,27 +18,28 @@ public class OdersController : ControllerBase
   }
 
 
-  [HttpPost("{userId}")]
-  public async Task<ActionResult<OrderModel>> PostOrder(string userId, [FromBody] OrderModel _order)
+  [HttpPost()]
+  public async Task<ActionResult<OrderModel>> PostOrder([FromBody] OrderModel newOrder)
   {
     try
     {
-      // 사용자
-      var orderUser = await _context.User.FindAsync(userId);
-      if (orderUser == null || _order == null) return BadRequest();
 
-      ProductItemModel? selectedProduct = await _context.Product.FindAsync(_order.orderProductId);
+      // 사용자
+      var orderUser = await _context.User.FindAsync(newOrder.userId);
+      if (orderUser == null) return BadRequest();
+
+      ProductItemModel? selectedProduct = await _context.Product.FindAsync(newOrder.orderProductId);
 
       if (selectedProduct == null) return NotFound();
       if (selectedProduct.Quantity <= 0) return StatusCode(200, "No quantity left.");
 
       selectedProduct.Quantity -= 1;
 
-      _context.Order.Add(_order);
+      _context.Order.Add(newOrder);
 
       await _context.SaveChangesAsync();
 
-      return Ok(_order);
+      return Ok(newOrder);
     }
     catch (Exception error)
     {
