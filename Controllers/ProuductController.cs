@@ -54,4 +54,29 @@ public class ProductsController : ControllerBase
       return StatusCode(500, new { error = "Internal Server Error" });
     }
   }
+
+  [HttpPost]
+  public async Task<IActionResult> AddProduct(CreateProductModel newProduct)
+  {
+    try
+    {
+      if (newProduct == null) return BadRequest();
+
+      var product = new ProductItemModel(newProduct);
+      _context.Product.Add(product);
+
+      await _context.SaveChangesAsync();
+
+      return Ok(newProduct);
+
+    }
+    catch (Exception error)
+    {
+      _logger.LogError(error, "Get Order list Error");
+      return StatusCode(500, new { error = "Internal Server Error" });
+
+    }
+  }
+}
+  }
 }
