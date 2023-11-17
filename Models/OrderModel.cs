@@ -1,10 +1,19 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Shopping;
 
 
 public class OrderModel
 {
-  public string Id { get; set; }
-  public string ProductId { get; set; }
+  public Guid Id { get; set; }
+  [Required]
+  public string userId { get; set; } = "";
+
+  [Required]
+  public string orderProductId { get; set; } = "";
+
+  [Required]
+  public int quantity { get; set; }
 
   public string OrderType { get; set; }
 }
